@@ -4,3 +4,5 @@
 *.ipch
 *.bin
 *.obj
+deps/JUCE/docs/*
+deps/JUCE/examples/*

@@ -1,0 +1,57 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"deps/JUCE/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 142,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/JUCE-6.1.6",
+			"paths" : 
+			[
+				"out/build/x64-Debug/deps/JUCE/JUCEConfigVersion.cmake",
+				"out/build/x64-Debug/deps/JUCE/JUCEConfig.cmake",
+				"deps/JUCE/extras/Build/CMake/JUCECheckAtomic.cmake",
+				"deps/JUCE/extras/Build/CMake/JUCEHelperTargets.cmake",
+				"deps/JUCE/extras/Build/CMake/JUCEModuleSupport.cmake",
+				"deps/JUCE/extras/Build/CMake/JUCEUtils.cmake",
+				"deps/JUCE/extras/Build/CMake/LaunchScreen.storyboard",
+				"deps/JUCE/extras/Build/CMake/PIPAudioProcessor.cpp.in",
+				"deps/JUCE/extras/Build/CMake/PIPComponent.cpp.in",
+				"deps/JUCE/extras/Build/CMake/PIPConsole.cpp.in",
+				"deps/JUCE/extras/Build/CMake/RecentFilesMenuTemplate.nib",
+				"deps/JUCE/extras/Build/CMake/UnityPluginGUIScript.cs.in",
+				"deps/JUCE/extras/Build/CMake/checkBundleSigning.cmake",
+				"deps/JUCE/extras/Build/CMake/copyDir.cmake",
+				"deps/JUCE/extras/Build/CMake/juce_runtime_arch_detection.cpp"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "deps/JUCE",
+		"source" : "deps/JUCE"
+	}
+}

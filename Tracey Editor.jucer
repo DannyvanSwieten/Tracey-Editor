@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="u4cZug" name="Tracey Editor" projectType="guiapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              cppLanguageStandard="20">
+  <MAINGROUP id="yWHnaI" name="Tracey Editor">
+    <GROUP id="{27D23F22-D7CD-B057-5170-8882BBEF2B1B}" name="actions">
+      <FILE id="er3l6R" name="action.cpp" compile="1" resource="0" file="Source/actions/action.cpp"/>
+      <FILE id="pnT0FN" name="action.h" compile="0" resource="0" file="Source/actions/action.h"/>
+      <FILE id="s48aWg" name="load_scene_action.cpp" compile="1" resource="0"
+            file="Source/actions/load_scene_action.cpp"/>
+      <FILE id="Z8ZFAj" name="load_scene_action.h" compile="0" resource="0"
+            file="Source/actions/load_scene_action.h"/>
+      <FILE id="kVBqMI" name="project_query_action.cpp" compile="1" resource="0"
+            file="Source/actions/project_query_action.cpp"/>
+      <FILE id="NNGRH3" name="project_query_action.hpp" compile="0" resource="0"
+            file="Source/actions/project_query_action.hpp"/>
+    </GROUP>
+    <GROUP id="{4AF393AD-7331-45FC-F462-22A7E6A7DD30}" name="controller">
+      <FILE id="QZ3clQ" name="application_controller.cpp" compile="1" resource="0"
+            file="Source/controller/application_controller.cpp"/>
+      <FILE id="hcoVfD" name="application_controller.h" compile="0" resource="0"
+            file="Source/controller/application_controller.h"/>
+    </GROUP>
+    <GROUP id="{9D30EB8F-E6C2-C142-0495-0A108533E47B}" name="model">
+      <FILE id="dTfTHc" name="menu.cpp" compile="1" resource="0" file="Source/model/menu.cpp"/>
+      <FILE id="DkHOwS" name="menu.hpp" compile="0" resource="0" file="Source/model/menu.hpp"/>
+      <FILE id="SkzNJB" name="scene_graph.cpp" compile="1" resource="0" file="Source/model/scene_graph.cpp"/>
+      <FILE id="ZDEv0z" name="scene_graph.h" compile="0" resource="0" file="Source/model/scene_graph.h"/>
+      <FILE id="vvwJf9" name="track.cpp" compile="1" resource="0" file="Source/model/track.cpp"/>
+      <FILE id="nuAt1w" name="track.hpp" compile="0" resource="0" file="Source/model/track.hpp"/>
+    </GROUP>
+    <GROUP id="{5F89315C-826D-7F9F-77A1-4784B1A9420B}" name="Source">
+      <FILE id="Stl35t" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="NBhb7t" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="Y5ISFl" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+    </GROUP>
+    <GROUP id="{2227AA2D-F12E-362C-F24A-B9D159D89C95}" name="ui">
+      <FILE id="TApQYA" name="animation_panel.cpp" compile="1" resource="0"
+            file="Source/ui/animation_panel.cpp"/>
+      <FILE id="WoQ0bA" name="animation_panel.h" compile="0" resource="0"
+            file="Source/ui/animation_panel.h"/>
+      <FILE id="ys5sIx" name="scene_graph_view.cpp" compile="1" resource="0"
+            file="Source/ui/scene_graph_view.cpp"/>
+      <FILE id="ZYZCyJ" name="scene_graph_view.h" compile="0" resource="0"
+            file="Source/ui/scene_graph_view.h"/>
+      <FILE id="kL64cR" name="track_panel.cpp" compile="1" resource="0" file="Source/ui/track_panel.cpp"/>
+      <FILE id="nkCyYO" name="track_panel.hpp" compile="0" resource="0" file="Source/ui/track_panel.hpp"/>
+      <FILE id="nVQFt9" name="track_view.cpp" compile="1" resource="0" file="Source/ui/track_view.cpp"/>
+      <FILE id="YCPPge" name="track_view.hpp" compile="0" resource="0" file="Source/ui/track_view.hpp"/>
+      <FILE id="h4Zvsp" name="view_port.cpp" compile="1" resource="0" file="Source/ui/view_port.cpp"/>
+      <FILE id="tRSmCv" name="view_port.hpp" compile="0" resource="0" file="Source/ui/view_port.hpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Tracey Editor"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Tracey Editor"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Tracey Editor"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Tracey Editor"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Tracey Editor"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Tracey Editor"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+  </MODULES>
+</JUCERPROJECT>

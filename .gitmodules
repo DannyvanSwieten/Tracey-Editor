@@ -1,0 +1,3 @@
+[submodule "deps/graphql_ws"]
+	path = deps/graphql_ws
+	url = https://github.com/stijnfrishert/graphql_ws.git
