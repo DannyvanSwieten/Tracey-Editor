@@ -1,7 +1,8 @@
 #pragma once
 #include "JuceHeader.h"
-#include "action.h"
+#include "action.hpp"
 #include <functional>
+#include <nlohmann/json.hpp>
 namespace tracey {
 	class ApplicationController;
 	class ProjectQuery : public Action {
@@ -15,11 +16,11 @@ namespace tracey {
 
 	public:
 
-		std::function<void(const juce::var&)> onResult;
+		std::function<void(const nlohmann::json&)> onResult;
 
 	private:
 
 		ApplicationController& controller;
-		const char* body = "{\"query\": \"{scenes{root name nodes { name mesh }}}\"}";
+		const char* body = "{ scenes{root name nodes {name mesh}} }";
 	};
 }

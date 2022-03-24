@@ -9,22 +9,57 @@
 */
 #include <string_view>
 #include <sstream>
-#include "application_controller.h"
+#include "application_controller.hpp"
 
 namespace tracey {
 	ApplicationController::ApplicationController():
-		ctx("127.0.0.1:7000")
+		ctx("127.0.0.1:7000/ws")
 	{
-		
+		sceneLoadedSubscription = ctx.sendAsync(
+			R"(subscription{
+				sceneLoaded { 
+					id
+					root 
+					name 
+					nodes {
+						id
+						name 
+						meshes {
+							name
+							material {
+								name
+								roughness
+								metalness
+								baseColor
+							}
+						}
+						children
+					} 
+				} 
+			})", {}, [&](const nlohmann::json& value) {
+			for (auto listener : eventListeners.at("sceneLoaded"))
+			{
+				listener->handleEvent(value["sceneLoaded"]);
+			}
+		});
 	}
 	ApplicationController::~ApplicationController()
 	{
 	}
+	void ApplicationController::registerEventListener(const std::string& subscription, GraphQLEventListener* listener)
+	{
+		if (eventListeners.find(subscription) == eventListeners.end())
+			eventListeners[subscription] = {};
+
+		eventListeners[subscription].emplace_back(listener);
+	}
 	void ApplicationController::scheduleAction(std::unique_ptr<Action>&& action)
 	{
-		action->redo();
-		if (action->isUndoable())
-			undoStack.push(std::move(action));
+		//juce::MessageManager::callAsync([&, action = std::move(action)]{
+			action->redo();
+			if (action->isUndoable())
+				undoStack.push(std::move(action));
+		//});
 	}
 	void ApplicationController::undo()
 	{
@@ -38,17 +73,9 @@ namespace tracey {
 	void ApplicationController::handleStateMutation()
 	{
 	}
-	juce::var ApplicationController::sendQuery(const char* body)
-	{
-		//jassert(success);
-		std::stringstream ss;
-		ss << "POST / HTTP/1.0" << std::endl;
-		ss << "Content-Length:" << strlen(body) << std::endl;
-		ss << "Content-Type: application/json" << std::endl << std::endl;
-		ss << body;
 
-		const auto message = ss.str();
-		const auto result = ctx.sendSync(ss.str(), {});
-		return juce::var{};
+	void ApplicationController::sendQuery(const std::string_view message, std::function<void(const nlohmann::json& value)> onResult)
+	{
+		ctx.sendAsync(message, {}, onResult).detach();
 	}
 }

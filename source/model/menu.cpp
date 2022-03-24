@@ -9,8 +9,9 @@
 */
 
 #include "menu.hpp"
-#include "../controller/application_controller.h"
-#include "../actions/load_scene_action.h"
+#include "../controller/application_controller.hpp"
+#include "../actions/load_scene_action.hpp"
+#include "../actions/render_scene_action.hpp"
 namespace tracey {
 	MenuModel::MenuModel(ApplicationController& appController): appController(appController)
 	{
@@ -29,6 +30,11 @@ namespace tracey {
 			menu.addItem(1, "New");
 			menu.addItem(2, "Open");
 		}
+			  break;
+		case 1: {
+			menu.addItem(3, "Render");
+		}
+			  break;
 		}
 
 		return menu;
@@ -52,6 +58,16 @@ namespace tracey {
 				});
 				break;
 			}
+			}
+		}
+		case 1:
+		{
+			switch (menuItemID)
+			{
+			case 3:
+				appController.scheduleAction(std::make_unique<RenderSceneQuery>(appController));
+
+				break;
 			}
 		}
 		}

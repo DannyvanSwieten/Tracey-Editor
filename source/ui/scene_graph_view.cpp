@@ -10,47 +10,16 @@
 
 #include "scene_graph_view.hpp"
 #include "../actions/project_query_action.hpp"
+#include "../model/scene_graph.hpp"
 
 namespace tracey {
 	namespace gui {
-		SceneGraphViewComponent::SceneGraphViewComponent(ApplicationController& appController) : appController(appController)
+		SceneGraphViewComponent::SceneGraphViewComponent(ApplicationController& appController)
+			: appController(appController)
 		{
-			ProjectQuery query(appController);
+
+			appController.registerEventListener("sceneLoaded", this);
 			auto root = new ProjectTreeViewItem();
-			query.onResult = [&](const juce::var& result) {
-				if (result.hasProperty("scenes"))
-				{
-					const auto& scenes = result["scenes"].getArray();
-					for (const auto& scene : *scenes)
-					{
-						auto sceneView = new SceneTreeViewItem(scene["name"]);
-						if (scene.hasProperty("nodes"))
-						{
-							const auto nodes = scene["nodes"].getArray();
-							for (const auto& node : *nodes)
-							{
-								juce::String name = node["name"];
-								auto nodeView = new NodeTreeViewItem(name);
-								if (node.hasProperty("mesh")) {
-									const auto& mesh = node["mesh"];
-									nodeView->addSubItem(new MeshTreeViewItem(juce::String("Mesh: ") + mesh));
-								}
-								sceneView->addSubItem(nodeView);
-							}
-						}
-
-						if (scene.hasProperty("root"))
-						{
-
-						}
-
-						root->addSubItem(sceneView);
-					}
-				}
-
-			};
-			
-			query.redo();
 			tree.setRootItem(root);
 			addAndMakeVisible(tree);
 		}
@@ -60,11 +29,54 @@ namespace tracey {
 		}
 		void SceneGraphViewComponent::resized()
 		{
-			tree.setSize(getWidth(), getHeight());
+			tree.setSize(getWidth(), getHeight() / 2);
 		}
-		SceneTreeViewItem::SceneTreeViewItem(const juce::String& name): name(name)
+		NodeTreeViewItem* SceneGraphViewComponent::buildNodeView(size_t sceneId, const nlohmann::json& node, const::nlohmann::json& nodes)
 		{
-			
+			juce::String name = node["name"];
+			auto nodeView = new NodeTreeViewItem(name, sceneId, node["id"]);
+			nodeView->onClick = [&](size_t sceneId, size_t nodeId) {
+				std::stringstream body;
+				body << "query{getNode(sceneId: " << std::to_string(sceneId);
+				body << " nodeId :" << std::to_string(nodeId);
+				body << "){name meshes{material{name roughness metalness baseColor}}}}";
+
+				appController.sendQuery(body.str(), [&](const nlohmann::json& result) {
+					juce::MessageManager::callAsync([&, result] {
+						nodeInspector = std::make_unique<NodeInspector>(result["getNode"]);
+						nodeInspector->setSize(getWidth(), getHeight() / 2);
+						nodeInspector->setTopLeftPosition(0, tree.getBottom());
+						addAndMakeVisible(*nodeInspector);
+					});
+				});
+			};
+
+			for (auto& child : node["children"])
+			{
+				size_t idx = child;
+				auto view = buildNodeView(sceneId, nodes[idx], nodes);
+				nodeView->addSubItem(view);
+			}
+
+			return nodeView;
+		}
+		void SceneGraphViewComponent::handleEvent(const nlohmann::json& event)
+		{
+			juce::MessageManager::callAsync([&, event]{
+				const size_t rootIndex = event["root"];
+
+				const auto nodes = event["nodes"];
+				const size_t id = event["id"];
+				const std::string name = event["name"];
+				auto sceneView = new SceneTreeViewItem( name, id );
+				sceneView->addSubItem(buildNodeView(id, nodes[rootIndex], nodes));
+
+				tree.getRootItem()->addSubItem(sceneView);
+			});
+		}
+		SceneTreeViewItem::SceneTreeViewItem(const juce::String& name, size_t id) : name(name)
+		{
+
 		}
 		bool SceneTreeViewItem::mightContainSubItems()
 		{
@@ -77,7 +89,7 @@ namespace tracey {
 			g.setColour(juce::Colours::lightgrey);
 			g.drawText(name, 0, 0, width, height, juce::Justification::centred);
 		}
-		NodeTreeViewItem::NodeTreeViewItem(const juce::String& name): name(name)
+		NodeTreeViewItem::NodeTreeViewItem(const juce::String& name, size_t sceneId, size_t nodeId) : name(name), sceneId(sceneId), nodeId(nodeId)
 		{
 		}
 		bool NodeTreeViewItem::mightContainSubItems()
@@ -91,6 +103,11 @@ namespace tracey {
 			g.setColour(juce::Colours::lightgrey);
 			g.drawText(name, 0, 0, width, height, juce::Justification::centred);
 		}
+		void NodeTreeViewItem::itemClicked(const MouseEvent&)
+		{
+			if(onClick)
+				onClick(sceneId, nodeId);
+		}
 		bool ProjectTreeViewItem::mightContainSubItems()
 		{
 			return true;
@@ -100,21 +117,7 @@ namespace tracey {
 			g.setColour(juce::Colours::grey);
 			g.drawRect(0, 0, width, height);
 			g.setColour(juce::Colours::lightgrey);
-			g.drawText("Project", 0, 0, width, height, juce::Justification::centred);
+			g.drawText("Scenes:", 0, 0, width, height, juce::Justification::centred);
 		}
-		MeshTreeViewItem::MeshTreeViewItem(const juce::String& name):name(name)
-		{
-		}
-		bool MeshTreeViewItem::mightContainSubItems()
-		{
-			return false;
-		}
-		void MeshTreeViewItem::paintItem(juce::Graphics& g, int width, int height)
-		{
-			g.setColour(juce::Colours::grey);
-			g.drawRect(0, 0, width, height);
-			g.setColour(juce::Colours::lightgrey);
-			g.drawText(name, 0, 0, width, height, juce::Justification::centred);
-		}
-	}
+}
 }

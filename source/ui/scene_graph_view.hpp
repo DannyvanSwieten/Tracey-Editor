@@ -1,82 +1,78 @@
 /*
   ==============================================================================
 
-    scene_graph_view.h
-    Created: 21 Feb 2022 4:50:07pm
-    Author:  danny
+	scene_graph_view.h
+	Created: 21 Feb 2022 4:50:07pm
+	Author:  danny
 
   ==============================================================================
 */
 
 #pragma once
 #include <functional>
+#include <nlohmann/json.hpp>
 #include "JuceHeader.h"
+#include "../controller/application_controller.hpp"
+#include "node_inspector.hpp"
 namespace tracey {
-    class ApplicationController;
-    namespace gui {
+	namespace gui {
 
-        class ProjectTreeViewItem : public juce::TreeViewItem {
-        public:
+		class ProjectTreeViewItem : public juce::TreeViewItem {
+		public:
+			// Inherited via TreeViewItem
+			virtual bool mightContainSubItems() override;
+			void paintItem(juce::Graphics& g, int width, int height) override;
+		};
 
+		class SceneTreeViewItem : public juce::TreeViewItem {
+		public:
+			SceneTreeViewItem(const juce::String& name, size_t id);
+			// Inherited via TreeViewItem
+			virtual bool mightContainSubItems() override;
+			void paintItem(juce::Graphics& g, int width, int height) override;
+		private:
 
-            // Inherited via TreeViewItem
-            virtual bool mightContainSubItems() override;
-            void paintItem(juce::Graphics& g, int width, int height) override;
+			juce::String name;
+		};
 
-        };
+		class NodeTreeViewItem : public juce::TreeViewItem {
+		public:
+			NodeTreeViewItem(const juce::String& name, size_t sceneId, size_t nodeId);
 
-        class SceneTreeViewItem : public juce::TreeViewItem {
-        public:
+			// Inherited via TreeViewItem
+			virtual bool mightContainSubItems() override;
+			void paintItem(juce::Graphics& g, int width, int height) override;
+			void itemClicked(const MouseEvent&);
 
-            SceneTreeViewItem(const juce::String& name);
-            // Inherited via TreeViewItem
-            virtual bool mightContainSubItems() override;
-            void paintItem(juce::Graphics& g, int width, int height) override;
-        private:
+		public:
 
-            juce::String name;
-        };
+			std::function<void(size_t sceneId, size_t nodeId)> onClick;
 
-        class NodeTreeViewItem : public juce::TreeViewItem {
-        public:
-            NodeTreeViewItem(const juce::String& name);
+		private:
 
-            // Inherited via TreeViewItem
-            virtual bool mightContainSubItems() override;
-            void paintItem(juce::Graphics& g, int width, int height) override;
+			juce::String name;
+			size_t sceneId = 0;
+			size_t nodeId = 0;
+		};
 
-        private:
+		class SceneGraphViewComponent : public juce::Component, public GraphQLEventListener {
+		public:
+			SceneGraphViewComponent(ApplicationController& appController);
+			void paint(juce::Graphics& g) final;
+			void resized() final;
 
-            juce::String name;
-        };
+		private:
 
-        class MeshTreeViewItem : public juce::TreeViewItem {
-        public:
-            MeshTreeViewItem(const juce::String& name);
+			NodeTreeViewItem* buildNodeView(size_t sceneId, const nlohmann::json& value, const::nlohmann::json& nodes);
 
-            // Inherited via TreeViewItem
-            virtual bool mightContainSubItems() override;
-            void paintItem(juce::Graphics& g, int width, int height) override;
+		private:
 
-        private:
+			ApplicationController& appController;
+			juce::TreeView tree;
+			std::unique_ptr<NodeInspector> nodeInspector;
 
-            juce::String name;
-        };
-
-        class SceneGraphViewComponent : public juce::Component {
-        public:
-            SceneGraphViewComponent(ApplicationController& appController);
-            void paint(juce::Graphics& g) final;
-            void resized() final;
-
-        public:
-
-
-
-        private:
-
-            ApplicationController& appController;
-            juce::TreeView tree;
-        };
-    }
+			// Inherited via GraphQLEventListener
+			virtual void handleEvent(const nlohmann::json& event) override;
+		};
+	}
 }

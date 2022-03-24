@@ -9,7 +9,7 @@
 */
 
 #include "project_query_action.hpp"
-#include "../controller/application_controller.h"
+#include "../controller/application_controller.hpp"
 
 namespace tracey
 {
@@ -18,8 +18,7 @@ namespace tracey
     }
     std::optional<Error> ProjectQuery::redo() const
     {
-        const auto result = controller.sendQuery(body);
-        onResult(result);
+        controller.sendQuery(body, nullptr);
         return std::nullopt;
     }
 

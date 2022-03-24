@@ -9,7 +9,7 @@
 #include <JuceHeader.h>
 #include "ui/main_component.hpp"
 #include "model/menu.hpp"
-#include "controller/application_controller.h"
+#include "controller/application_controller.hpp"
 #include "actions/project_query_action.hpp"
 //==============================================================================
 class TraceyEditorApplication : public juce::JUCEApplication
@@ -72,7 +72,6 @@ public:
 			setMenuBar(menu.get());
 			setContentOwned(new MainComponent(appController), true);
 
-			setFullScreen(true);
 			setResizable(true, true);
 			centreWithSize(getWidth(), getHeight());
 
